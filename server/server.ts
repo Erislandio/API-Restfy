@@ -1,11 +1,11 @@
 import * as restify from "restify";
 import { enviroment } from "../common/enviroment";
-const PORT = 3000;
+import { Router } from "../common/router";
 
 export class Server {
     application: restify.Server;
 
-    initRoutes(): Promise<any> {
+    initRoutes(routers: Router[]): Promise<any> {
         return new Promise((resolve, reject) => {
             try {
                 this.application = restify.createServer({
@@ -13,27 +13,14 @@ export class Server {
                     version: "1.0.0"
                 });
 
-                // * criar rota
-                this.application.get("/hello", (req, res, next) => {
-                    res.setHeader("Content-type", "application/json");
-                    res.status(200);
-                    res.json({
-                        message: "Hello"
-                    });
-                    return next();
-                });
-
-                this.application.get("/info", (req, res, next) => {
-                    res.json({
-                        browser: req.userAgent(),
-                        method: req.method,
-                        url: req.url,
-                        path: req.path(),
-                        params: req.query
-                    });
-                });
-
                 this.application.use(restify.plugins.queryParser());
+
+                // * routers
+
+                for (let router of routers) {
+                    router.applyRouters(this.application);
+                }
+
                 this.application.listen(enviroment.server.port, () => {
                     resolve(this.application);
                 });
@@ -43,7 +30,7 @@ export class Server {
         });
     }
 
-    bootstrap(): Promise<Server> {
-        return this.initRoutes().then(() => this);
+    bootstrap(routers: Router[] = []): Promise<Server> {
+        return this.initRoutes(routers).then(() => this);
     }
 }
