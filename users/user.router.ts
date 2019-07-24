@@ -24,6 +24,18 @@ class UsersRouter extends Router {
             })
         })
 
+        application.get('user', (req, res, next) => {
+            const { id } = JSON.parse(req.body)
+            User.findById(id).then(response => {
+                if (!response) {
+                    res.json({ message: "Usuário não encontrado!" })
+                }
+
+                res.json(response)
+                return next()
+            })
+        })
+
         application.post('users', (req, res, next) => {
             let user = new User(req.body)
             try {
