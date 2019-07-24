@@ -27,6 +27,7 @@ export class Server {
                 });
 
                 this.application.use(restify.plugins.queryParser());
+                this.application.use(restify.plugins.bodyParser())
 
                 // * routers
 

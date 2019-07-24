@@ -23,6 +23,18 @@ class UsersRouter extends Router {
 
             })
         })
+
+        application.post('users', (req, res, next) => {
+            let user = new User(req.body)
+            try {
+                user.save().then(user => {
+                    res.json(user)
+                })
+            } catch (error) {
+                res.json(error)
+            }
+            return next()
+        })
     }
 }
 
