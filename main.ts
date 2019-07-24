@@ -8,9 +8,7 @@ server
     .then(server => {
         console.log(
             chalk.blue(
-                `Server is running on ${chalk.bgGreen.white.bold(
-                    `${server.application.url}`
-                )}`
+                `Server is running on ${chalk.bgGreen.white.bold('https://localhost:3000')}`
             )
         );
     })
